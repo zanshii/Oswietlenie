@@ -38,14 +38,14 @@ namespace Oswietlenie
                 CalculateGeometry();
             }
         }
-        public virtual Point3DCollection pts
+        public virtual Point3DCollection Points
         {
             get 
             {
                 return points;
             }
         }
-        public virtual Int32Collection indices
+        public virtual Int32Collection TriangleIndices
         {
             get
             {
