@@ -23,5 +23,30 @@ namespace Oswietlenie
         {
             InitializeComponent();
         }
+        private void KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.A:
+                    //obrot w lewo
+                    break;
+                case Key.D:
+                    //obrot w prawo
+                    break;
+                case Key.Z:
+                    //material rozpraszajacy (drewno)
+                    break;
+                case Key.X:
+                    //material posredni (plastik)
+                    break;
+                case Key.C:
+                    //material odbijajacy (szklo)
+                    break;
+
+                case Key.Escape:
+                    Application.Current.Shutdown();
+                    break;
+            }
+        }
     }
 }
