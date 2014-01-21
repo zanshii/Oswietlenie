@@ -26,9 +26,9 @@
 
         <Viewport3D Grid.Column="1"
                     Grid.Row="1"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Stretch"
-                    Name="Viewport1" Height="280">
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Name="Viewport1" Height="280" Width="500">
             <Viewport3D.Camera>
                 <PerspectiveCamera x:Name="myCamera"
                                    Position="100 50 0"
@@ -41,10 +41,7 @@
                     <Model3DGroup>
                         <DirectionalLight Color="#FFFFFF"
                                           Direction="0 -30 0"/>
-                        <DirectionalLight Color="#FFFFFF"
-                                          Direction="0 30 0"/>
-                        <GeometryModel3D
-                            Geometry="{StaticResource Sphere1}">
+                        <GeometryModel3D Geometry="{StaticResource Sphere1}">
                             <GeometryModel3D.Material>
                                 <MaterialGroup>
                                     <DiffuseMaterial>
