@@ -43,9 +43,10 @@ namespace ShadowMapping
 
             // These values change every frame, so we assign them
             // to EffectParameters to speed up access
+            
             mWorld = effect.Parameters["g_mWorld"];
             mCameraView = effect.Parameters["g_mCameraView"];
-            CameraPos = effect.Parameters["g_CameraPos"];
+            //CameraPos = effect.Parameters["g_CameraPos"];
             mCameraProj = effect.Parameters["g_mCameraProj"];
             MeshTexture = effect.Parameters["g_MeshTexture"];
             ShadowMapTexture = effect.Parameters["g_ShadowMapTexture"];
