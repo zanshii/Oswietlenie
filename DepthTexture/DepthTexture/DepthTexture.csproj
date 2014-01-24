@@ -59,7 +59,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\redtexture.png" />
-    <Content Include="Content\ShadowMap.fx" />
     <Content Include="Content\TerrainTex.png" />
     <Content Include="Content\whitetexture.png" />
     <Content Include="D:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
@@ -69,13 +68,6 @@
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <None Include="Content\CourierNew.spritefont" />
-    <None Include="Content\DepthTextureContent.contentproj" />
-    <None Include="Content\redtorus.fbx" />
-    <None Include="Content\SphereHighPoly.fbx" />
-    <None Include="Content\Terrain.fbx" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
