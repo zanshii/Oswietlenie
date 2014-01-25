@@ -12,6 +12,7 @@ namespace ConsoleApplication1
     {
         Vector4 ambientLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
         Vector4 diffuseLight = new Vector4(0.7f, 0.7f, 0.7f, 1f);
+        Vector4 specularLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
         Vector4 noLight = new Vector4(0.0f, 0.0f, 0.0f, 1f);
         Vector3 lightPos = new Vector3(200.0f, 300.0f, 100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
@@ -75,7 +76,7 @@ namespace ConsoleApplication1
             length /= 2.0f;
             Vector3 Center = new Vector3(100, 0, 0);
             float Radius = 32;
-            uint Precision = 64;
+            uint Precision = 128;
 
 
             if (Radius < 0f)
@@ -91,7 +92,11 @@ namespace ConsoleApplication1
 
             float theta1, theta2, theta3;
 
-            Vector3 Normal, Position;
+            Vector3 Normal, Position, L, N, R, V;
+            int alfa = 0;
+            Vector4 i_a, i_d, i_s;
+            float k_a, k_d, k_s, f;
+
 
             for (uint j = 0; j < Precision / 2; j++)
             {
@@ -112,7 +117,43 @@ namespace ConsoleApplication1
                     
                     //tutaj zmienić kolor na policzony z phonga
                     //ambient i diffuse masz w ambientLight, diffuseLight
-                    //GL.Color4(a,b,c,d)
+                    //L = wektor od powierzchni do zrodla
+                    //N = wektor normalny
+                    //R = wektor odbicia idealnego
+                    //R = 2(L x N)N - L
+                    //V = kierunek do obserwatora
+                    //k_a = odbicie ambientowe
+                    //k_d = odbicie rozpraszajace
+                    //k_d = odbicie odbijajace (WYMYSLEC LEPSZA NAZWE)
+                    //powyzsze 3 stale odpowiadaja za material
+                    //i_a = ambientLight
+                    //i_d = diffuseLight
+                    //i_s = specularLight
+                    //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
+                    //GL.Color4(a,d,s,1)
+
+                    k_a = 1;
+                    k_d = 1;
+                    k_s = 1;
+                    alfa = 100;
+                    N = Normal;
+                    N.Normalize();
+                    L.X = Position.X - lightPos.X;
+                    L.Y = Position.Y - lightPos.Y;
+                    L.Z = Position.Z - lightPos.Z;
+                    L.Normalize();
+                    f = Vector3.Dot(L, N);
+                    R = 2 * f * N - L;
+                    V.X = cameraPos.X - Position.X;
+                    V.Y = cameraPos.Y - Position.Y;
+                    V.Z = cameraPos.Z - Position.Z;
+                    i_a = k_a * ambientLight;
+                    f = Vector3.Dot(L, N);
+                    i_d = k_d * f *diffuseLight;
+                    f = Vector3.Dot(R, V);
+                    f = (float) Math.Pow(f, alfa);
+                    i_s = k_s * f * specularLight;
+                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
@@ -127,7 +168,44 @@ namespace ConsoleApplication1
                     Position.Z = Center.Z + Radius * Normal.Z;
 
                     //tutaj zmienić kolor na policzony z phonga
-                    //GL.Color4(a,b,c,d)
+                    //ambient i diffuse masz w ambientLight, diffuseLight
+                    //L = wektor od powierzchni do zrodla
+                    //N = wektor normalny
+                    //R = wektor odbicia idealnego
+                    //R = 2(L x N)N - L
+                    //V = kierunek do obserwatora
+                    //k_a = odbicie ambientowe
+                    //k_d = odbicie rozpraszajace
+                    //k_d = odbicie odbijajace (WYMYSLEC LEPSZA NAZWE)
+                    //powyzsze 3 stale odpowiadaja za material
+                    //i_a = ambientLight
+                    //i_d = diffuseLight
+                    //i_s = specularLight
+                    //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
+                    //GL.Color4(a,d,s,1)
+
+                    k_a = 1;
+                    k_d = 1;
+                    k_s = 1;
+                    alfa = 5;
+                    N = Normal;
+                    N.Normalize();
+                    L.X = Position.X - lightPos.X;
+                    L.Y = Position.Y - lightPos.Y;
+                    L.Z = Position.Z - lightPos.Z;
+                    L.Normalize();
+                    f = Vector3.Dot(L, N);
+                    R = 2 * f * N - L;
+                    V.X = cameraPos.X - Position.X;
+                    V.Y = cameraPos.Y - Position.Y;
+                    V.Z = cameraPos.Z - Position.Z;
+                    i_a = k_a * ambientLight;
+                    f = Vector3.Dot(L, N);
+                    i_d = k_d * f * diffuseLight;
+                    f = Vector3.Dot(R, V);
+                    f = (float)Math.Pow(f, alfa);
+                    i_s = k_s * f * specularLight;
+                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * j * OneThroughPrecision);
