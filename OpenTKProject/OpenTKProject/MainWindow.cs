@@ -11,10 +11,13 @@ namespace ConsoleApplication1
     class MainWindow : GameWindow
     {
         Vector4 ambientLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
-        Vector4 diffuseLight = new Vector4(0.7f, 0.7f, 0.7f, 1f);
-        Vector4 specularLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
-        Vector3 lightPos = new Vector3(-200.0f, -300.0f, -100.0f);
+        Vector4 diffuseLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
+        Vector4 specularLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
+        Vector3 lightPos = new Vector3(200.0f, 300.0f, 100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
+        float k_a = 1;
+        float k_d = 1;
+        float k_s = 1;
 
         float factor = 5.0f;
 
@@ -44,13 +47,74 @@ namespace ConsoleApplication1
             if (key.Key == Key.Escape)
                 this.Exit();
             if (key.Key == Key.Left)
-                lightPos[2] += 5f;
+                lightPos[2] += 10f;
             if (key.Key == Key.Right)
-                lightPos[2] -= 5f;
+                lightPos[2] -= 10f;
             if (key.Key == Key.Up)
-                lightPos[0] += 5f;
+                lightPos[0] += 10f;
             if (key.Key == Key.Down)
-                lightPos[0] -= 5f;
+                lightPos[0] -= 10f;
+            if (key.Key == Key.A)
+            {
+                if (k_a == 1)
+                    k_a = 1;
+                else
+                    k_a += 0.1f;
+            }
+            if (key.Key == Key.Z)
+            {
+                if (k_a == 0)
+                    k_a = 0;
+                else
+                    k_a -= 0.1f;
+            }
+            if (key.Key == Key.S)
+            {
+                if (k_s == 1)
+                    k_s = 1;
+                else
+                    k_s += 0.1f;
+            }
+            if (key.Key == Key.X)
+            {
+                if (k_s == 0)
+                    k_s = 0;
+                else
+                    k_s -= 0.1f;
+            }
+            if (key.Key == Key.D)
+            {
+                if (k_d == 1)
+                    k_d = 1;
+                else
+                    k_d += 0.1f;
+            }
+            if (key.Key == Key.C)
+            {
+                if (k_d == 0)
+                    k_d = 0;
+                else
+                    k_d -= 0.1f;
+            }
+            //presety
+            //1 - 100% rozpraszajacy
+            //2 - 100% odbijajacy
+            //3 - 50/50
+            if (key.Key == Key.Number1)
+            {
+                k_d = 1;
+                k_s = 0;
+            }
+            if (key.Key == Key.Number2)
+            {
+                k_d = 0;
+                k_s = 1;
+            }
+            if (key.Key == Key.Number3)
+            {
+                k_d = 0.5f;
+                k_s = 0.5f;
+            }
 
             if ((key.Key == Key.AltLeft || key.Key == Key.AltRight) &&
                 (key.Key == Key.Enter || key.Key == Key.KeypadEnter))
@@ -94,7 +158,7 @@ namespace ConsoleApplication1
             Vector3 Normal, Position, L, N, R, V;
             int alfa = 0;
             Vector4 i_a, i_d, i_s;
-            float k_a, k_d, k_s, f;
+            float f;
 
 
             for (uint j = 0; j < Precision / 2; j++)
@@ -131,9 +195,6 @@ namespace ConsoleApplication1
                     //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
                     //GL.Color4(a,d,s,1)
 
-                    k_a = 1;
-                    k_d = 1;
-                    k_s = 1;
                     alfa = 10;
                     N = Normal;
                     N.Normalize();
@@ -186,10 +247,6 @@ namespace ConsoleApplication1
                     //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
                     //GL.Color4(a,d,s,1)
 
-                    k_a = 1;
-                    k_d = 1;
-                    k_s = 1;
-                    alfa = 10;
                     N = Normal;
                     N.Normalize();
                     L.X = Position.X - lightPos.X;
