@@ -107,7 +107,7 @@ namespace ConsoleApplication1
             }
             if (key.Key == Key.Number2)
             {
-                k_d = 0;
+                k_d = 0.75f;
                 k_s = 1;
             }
             if (key.Key == Key.Number3)
