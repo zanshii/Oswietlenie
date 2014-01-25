@@ -155,7 +155,7 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float) Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_s[0], i_d[0], 1);
+                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
@@ -209,7 +209,7 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float)Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_s[0], i_d[0], 1);
+                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * j * OneThroughPrecision);
