@@ -16,12 +16,6 @@ namespace ConsoleApplication1
         float[] lightPos = new float[4] { 200.0f, 300.0f, 100.0f, 1.0f };
         float[] cameraPos = new float[4] { 100.0f, 150.0f, 200.0f, 1.0f };
 
-        int shadowSize = 512;                 // set based on window size
-        uint shadowTextureID;
-        float[] sPlane = new float[4] { 1.0f, 0.0f, 0.0f, 0.0f };
-        float[] tPlane = new float[4] { 0.0f, 1.0f, 0.0f, 0.0f };
-        float[] rPlane = new float[4] { 0.0f, 0.0f, 1.0f, 0.0f };
-        float[] qPlane = new float[4] { 0.0f, 0.0f, 0.0f, 1.0f };
         float factor = 5.0f;
 
         float[] lightModelview = new float[16], lightProjection = new float[16];
@@ -29,7 +23,7 @@ namespace ConsoleApplication1
         int windowWidth = 512;                // window size
         int windowHeight = 512;
 
-        IntPtr esfera, cono;
+        IntPtr esfera;
 
         float rot = 0;
 
@@ -37,7 +31,6 @@ namespace ConsoleApplication1
             : base(800, 600)
         {
             esfera = Glu.NewQuadric();
-            cono = Glu.NewQuadric();
             Keyboard.KeyDown += Keyboard_KeyDown;
         }
 
@@ -94,72 +87,7 @@ namespace ConsoleApplication1
         }
         #endregion DrawModels()
 
-        #region RegenerateShadowMap()
-
-        void RegenerateShadowMap()
-        {
-            float lightToSceneDistance, nearPlane, fieldOfView;
-
-            // Save the depth precision for where it's useful
-            lightToSceneDistance = (float)Math.Sqrt(lightPos[0] * lightPos[0] +
-                                                    lightPos[1] * lightPos[1] +
-                                                    lightPos[2] * lightPos[2]);
-            nearPlane = lightToSceneDistance - 150.0f;
-            if (nearPlane < 50.0f)
-                nearPlane = 50.0f;
-            // Keep the scene filling the depth texture
-            fieldOfView = 17000.0f / lightToSceneDistance;
-
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            Glu.Perspective(fieldOfView, 1.0f, nearPlane, nearPlane + 300.0f);
-            GL.GetFloat(GetPName.ProjectionMatrix, lightProjection);
-            // Switch to light's point of view
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-            Glu.LookAt(lightPos[0], lightPos[1], lightPos[2],
-                        0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-            GL.GetFloat(GetPName.ModelviewMatrix, lightModelview);
-            GL.Viewport(0, 0, shadowSize, shadowSize);
-
-            // Clear the window with current clearing color
-            GL.Clear(ClearBufferMask.DepthBufferBit);
-
-            // All we care about here is resulting depth values
-            GL.ShadeModel(ShadingModel.Flat);
-            GL.Disable(EnableCap.Lighting);
-            GL.Disable(EnableCap.ColorMaterial);
-            GL.Disable(EnableCap.Normalize);
-            GL.ColorMask(false, false, false, false);
-
-            // Overcome imprecision
-            GL.Enable(EnableCap.PolygonOffsetFill);
-
-            DrawModels();
-
-            // Copy depth values into depth texture
-            GL.CopyTexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent,
-                     0, 0, shadowSize, shadowSize, 0);
-
-            // Restore normal drawing state
-            GL.ShadeModel(ShadingModel.Smooth);
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.ColorMaterial);
-            GL.Enable(EnableCap.Normalize);
-            GL.ColorMask(true, true, true, true);
-            GL.Disable(EnableCap.PolygonOffsetFill);
-
-            // Set up texture matrix for shadow map projection
-            GL.MatrixMode(MatrixMode.Texture);
-            GL.LoadIdentity();
-            GL.Translate(0.5f, 0.5f, 0.5f);
-            GL.Scale(0.5f, 0.5f, 0.5f);
-            GL.MultMatrix(lightProjection);
-            GL.MultMatrix(lightModelview);
-        }
-        #endregion RegenerateShadowMap()
-
-        #region OnLoad
+       #region OnLoad
 
         /// <summary>
         /// Setup OpenGL and load resources here.
@@ -191,18 +119,6 @@ namespace ConsoleApplication1
 
             windowWidth = Width;
             windowHeight = Height;
-
-            // Find the largest power of two that will fit in window
-            if (Width > Height)
-                shadowSize = Height;
-            else
-                shadowSize = Width;
-
-            // Try each size until we get one that's too big
-            i = 0;
-            while ((1 << i) <= shadowSize)
-                i++;
-            shadowSize = (1 << (i - 1));
         }
 
         #endregion
@@ -217,8 +133,6 @@ namespace ConsoleApplication1
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             rot += 0.5f;
-
-            RegenerateShadowMap();
         }
 
         #endregion
@@ -251,24 +165,6 @@ namespace ConsoleApplication1
             // Clear the window with current clearing color
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-
-            /*// Set up shadow comparison
-            GL.Enable(EnableCap.Texture2D);
-            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureCompareMode, (float)TextureCompareMode.CompareRToTexture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMinFilter.Nearest);
-
-            // Set up the eye plane for projecting the shadow map on the scene
-            GL.Enable(EnableCap.TextureGenS);
-            GL.Enable(EnableCap.TextureGenT);
-            GL.Enable(EnableCap.TextureGenR);
-            GL.Enable(EnableCap.TextureGenQ);
-            GL.TexGen(TextureCoordName.S, TextureGenParameter.EyePlane, sPlane);
-            GL.TexGen(TextureCoordName.T, TextureGenParameter.EyePlane, tPlane);
-            GL.TexGen(TextureCoordName.R, TextureGenParameter.EyePlane, rPlane);
-            GL.TexGen(TextureCoordName.Q, TextureGenParameter.EyePlane, qPlane);*/
-
             // Draw objects in the scene
             DrawModels();
 
@@ -287,7 +183,6 @@ namespace ConsoleApplication1
         {
             base.OnUnload(e);
 
-            Glu.DeleteQuadric(cono);
             Glu.DeleteQuadric(esfera);
         }
 }
