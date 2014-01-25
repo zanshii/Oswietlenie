@@ -13,7 +13,7 @@ namespace ConsoleApplication1
         Vector4 ambientLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
         Vector4 diffuseLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
         Vector4 specularLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
-        Vector3 lightPos = new Vector3(200.0f, 300.0f, 100.0f);
+        Vector3 lightPos = new Vector3(-200.0f, -300.0f, -100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
         float k_a = 1;
         float k_d = 1;
@@ -47,13 +47,13 @@ namespace ConsoleApplication1
             if (key.Key == Key.Escape)
                 this.Exit();
             if (key.Key == Key.Left)
-                lightPos[2] += 10f;
-            if (key.Key == Key.Right)
                 lightPos[2] -= 10f;
+            if (key.Key == Key.Right)
+                lightPos[2] += 10f;
             if (key.Key == Key.Up)
-                lightPos[0] += 10f;
-            if (key.Key == Key.Down)
                 lightPos[0] -= 10f;
+            if (key.Key == Key.Down)
+                lightPos[0] += 10f;
             if (key.Key == Key.A)
             {
                 if (k_a == 1)
