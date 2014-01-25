@@ -74,7 +74,7 @@ namespace ConsoleApplication1
             width /= 2.0f;
             height /= 2.0f;
             length /= 2.0f;
-            Vector3 Center = new Vector3(100, 0, 0);
+            Vector3 Center = new Vector3(0, 0, 0);
             float Radius = 32;
             uint Precision = 128;
 
@@ -155,7 +155,8 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float) Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
+                    GL.Color3(i_a[0], i_d[0], i_s[0]);
+                    //GL.Color3(i_a[0] + i_d[0] + i_s[0], i_a[1] + i_d[2] + i_s[3], i_a[1] + i_d[2] + i_s[3]);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
@@ -209,7 +210,7 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float)Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
+                    GL.Color3(i_a[0], i_d[0], i_s[0]);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * j * OneThroughPrecision);
