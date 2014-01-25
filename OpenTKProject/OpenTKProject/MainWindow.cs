@@ -135,7 +135,7 @@ namespace ConsoleApplication1
                     k_a = 1;
                     k_d = 1;
                     k_s = 1;
-                    alfa = 100;
+                    alfa = 10;
                     N = Normal;
                     N.Normalize();
                     L.X = Position.X - lightPos.X;
@@ -144,16 +144,18 @@ namespace ConsoleApplication1
                     L.Normalize();
                     f = Vector3.Dot(L, N);
                     R = 2 * f * N - L;
+                    R.Normalize();
                     V.X = cameraPos.X - Position.X;
                     V.Y = cameraPos.Y - Position.Y;
                     V.Z = cameraPos.Z - Position.Z;
+                    V.Normalize();
                     i_a = k_a * ambientLight;
                     f = Vector3.Dot(L, N);
                     i_d = k_d * f *diffuseLight;
                     f = Vector3.Dot(R, V);
                     f = (float) Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
+                    GL.Color4(i_a[0], i_s[0], i_d[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
@@ -196,16 +198,18 @@ namespace ConsoleApplication1
                     L.Normalize();
                     f = Vector3.Dot(L, N);
                     R = 2 * f * N - L;
+                    R.Normalize();
                     V.X = cameraPos.X - Position.X;
                     V.Y = cameraPos.Y - Position.Y;
                     V.Z = cameraPos.Z - Position.Z;
+                    V.Normalize();
                     i_a = k_a * ambientLight;
                     f = Vector3.Dot(L, N);
                     i_d = k_d * f * diffuseLight;
                     f = Vector3.Dot(R, V);
                     f = (float)Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    GL.Color4(i_a[0], i_d[0], i_s[0], 1);
+                    GL.Color4(i_a[0], i_s[0], i_d[0], 1);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * j * OneThroughPrecision);
