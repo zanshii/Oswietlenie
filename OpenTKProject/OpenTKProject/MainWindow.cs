@@ -189,7 +189,7 @@ namespace ConsoleApplication1
                     k_a = 1;
                     k_d = 1;
                     k_s = 1;
-                    alfa = 5;
+                    alfa = 10;
                     N = Normal;
                     N.Normalize();
                     L.X = Position.X - lightPos.X;
@@ -209,6 +209,7 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float)Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
+                    //GL.Color3(i_a[0], i_d[0], i_s[0]);
                     GL.Color3(i_a[0] + i_d[0] + i_s[0], i_a[1] + i_d[1] + i_s[1], i_a[2] + i_d[2] + i_s[2]);
 
                     GL.Normal3(Normal);
