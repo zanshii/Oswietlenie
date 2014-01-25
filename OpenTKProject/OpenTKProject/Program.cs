@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Windows;
 using OpenTK;
 using OpenTK.Graphics;
 namespace ConsoleApplication1
