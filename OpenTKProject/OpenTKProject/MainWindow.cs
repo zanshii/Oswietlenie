@@ -11,8 +11,8 @@ namespace ConsoleApplication1
     class MainWindow : GameWindow
     {
         Vector4 ambientLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
-        Vector4 diffuseLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
-        Vector4 specularLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
+        Vector4 diffuseLight = new Vector4(0.7f, 0.7f, 0.7f, 1f);
+        Vector4 specularLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
         Vector3 lightPos = new Vector3(-200.0f, -300.0f, -100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
         float k_a = 1f;
