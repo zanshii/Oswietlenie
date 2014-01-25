@@ -15,9 +15,9 @@ namespace ConsoleApplication1
         Vector4 specularLight = new Vector4(0.4f, 0.4f, 0.4f, 1f);
         Vector3 lightPos = new Vector3(-200.0f, -300.0f, -100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
-        float k_a = 1;
-        float k_d = 1;
-        float k_s = 1;
+        float k_a = 1f;
+        float k_d = 1f;
+        float k_s = 1f;
 
         float factor = 5.0f;
 
@@ -47,52 +47,52 @@ namespace ConsoleApplication1
             if (key.Key == Key.Escape)
                 this.Exit();
             if (key.Key == Key.Left)
-                lightPos[2] -= 10f;
+                lightPos[2] -= 50f;
             if (key.Key == Key.Right)
-                lightPos[2] += 10f;
+                lightPos[2] += 50f;
             if (key.Key == Key.Up)
-                lightPos[0] -= 10f;
+                lightPos[0] -= 50f;
             if (key.Key == Key.Down)
-                lightPos[0] += 10f;
+                lightPos[0] += 50f;
             if (key.Key == Key.A)
             {
-                if (k_a == 1)
-                    k_a = 1;
+                if (k_a >= 1f)
+                    k_a = 1f;
                 else
                     k_a += 0.1f;
             }
             if (key.Key == Key.Z)
             {
-                if (k_a == 0)
-                    k_a = 0;
+                if (k_a <= 0f)
+                    k_a = 0f;
                 else
                     k_a -= 0.1f;
             }
             if (key.Key == Key.S)
             {
-                if (k_s == 1)
-                    k_s = 1;
+                if (k_s >= 1f)
+                    k_s = 1f;
                 else
                     k_s += 0.1f;
             }
             if (key.Key == Key.X)
             {
-                if (k_s == 0)
-                    k_s = 0;
+                if (k_s <= 0f)
+                    k_s = 0f;
                 else
                     k_s -= 0.1f;
             }
             if (key.Key == Key.D)
             {
-                if (k_d == 1)
-                    k_d = 1;
+                if (k_d >= 1f)
+                    k_d = 1f;
                 else
                     k_d += 0.1f;
             }
             if (key.Key == Key.C)
             {
-                if (k_d == 0)
-                    k_d = 0;
+                if (k_d <= 0f)
+                    k_d = 0f;
                 else
                     k_d -= 0.1f;
             }
