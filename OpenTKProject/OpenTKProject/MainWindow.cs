@@ -111,6 +111,7 @@ namespace ConsoleApplication1
                     Position.Z = Center.Z + Radius * Normal.Z;
                     
                     //tutaj zmienić kolor na policzony z phonga
+                    //ambient i diffuse masz w ambientLight, diffuseLight
                     //GL.Color4(a,b,c,d)
 
                     GL.Normal3(Normal);
