@@ -13,8 +13,7 @@ namespace ConsoleApplication1
         Vector4 ambientLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
         Vector4 diffuseLight = new Vector4(0.7f, 0.7f, 0.7f, 1f);
         Vector4 specularLight = new Vector4(0.2f, 0.2f, 0.2f, 1f);
-        Vector4 noLight = new Vector4(0.0f, 0.0f, 0.0f, 1f);
-        Vector3 lightPos = new Vector3(200.0f, 300.0f, 100.0f);
+        Vector3 lightPos = new Vector3(-200.0f, -300.0f, -100.0f);
         Vector3 cameraPos = new Vector3(100.0f, 150.0f, 200.0f);
 
         float factor = 5.0f;
@@ -74,7 +73,7 @@ namespace ConsoleApplication1
             width /= 2.0f;
             height /= 2.0f;
             length /= 2.0f;
-            Vector3 Center = new Vector3(100, 0, 0);
+            Vector3 Center = new Vector3(0, 0, 0);
             float Radius = 32;
             uint Precision = 128;
 
