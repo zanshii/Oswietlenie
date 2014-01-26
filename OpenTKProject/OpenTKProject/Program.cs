@@ -11,7 +11,6 @@ namespace ConsoleApplication1
         {
             using (var mainWindow = new MainWindow())
             {
-                mainWindow.Title = "OpenTK Test";
                 mainWindow.Run();
             }
         }

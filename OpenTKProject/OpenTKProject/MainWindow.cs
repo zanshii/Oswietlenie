@@ -1,11 +1,12 @@
-﻿using System;
+﻿#pragma warning disable
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
-#pragma warning disable 618
+using OpenTK.Graphics;
+
 namespace ConsoleApplication1
 {
     class MainWindow : GameWindow
@@ -18,7 +19,7 @@ namespace ConsoleApplication1
         float k_a = 1f;
         float k_d = 1f;
         float k_s = 1f;
-
+        int alfa = 10;
         float factor = 5.0f;
 
         float[] lightModelview = new float[16], lightProjection = new float[16];
@@ -32,99 +33,8 @@ namespace ConsoleApplication1
         public MainWindow()
             : base(800, 600)
         {
-            Keyboard.KeyDown += Keyboard_KeyDown;
+            //Keyboard.KeyDown += Keyboard_KeyDown;
         }
-
-        #region Keyboard_KeyDown
-
-        /// <summary>
-        /// Occurs when a key is pressed.
-        /// </summary>
-        /// <param name="sender">The KeyboardDevice which generated this event.</param>
-        /// <param name="key">The key that was pressed.</param>
-        void Keyboard_KeyDown(object sender, KeyboardKeyEventArgs key)
-        {
-            if (key.Key == Key.Escape)
-                this.Exit();
-            if (key.Key == Key.Left)
-                lightPos[2] -= 50f;
-            if (key.Key == Key.Right)
-                lightPos[2] += 50f;
-            if (key.Key == Key.Up)
-                lightPos[0] -= 50f;
-            if (key.Key == Key.Down)
-                lightPos[0] += 50f;
-            if (key.Key == Key.A)
-            {
-                if (k_a >= 1f)
-                    k_a = 1f;
-                else
-                    k_a += 0.1f;
-            }
-            if (key.Key == Key.Z)
-            {
-                if (k_a <= 0f)
-                    k_a = 0f;
-                else
-                    k_a -= 0.1f;
-            }
-            if (key.Key == Key.S)
-            {
-                if (k_s >= 1f)
-                    k_s = 1f;
-                else
-                    k_s += 0.1f;
-            }
-            if (key.Key == Key.X)
-            {
-                if (k_s <= 0f)
-                    k_s = 0f;
-                else
-                    k_s -= 0.1f;
-            }
-            if (key.Key == Key.D)
-            {
-                if (k_d >= 1f)
-                    k_d = 1f;
-                else
-                    k_d += 0.1f;
-            }
-            if (key.Key == Key.C)
-            {
-                if (k_d <= 0f)
-                    k_d = 0f;
-                else
-                    k_d -= 0.1f;
-            }
-            //presety
-            //1 - 100% rozpraszajacy
-            //2 - 100% odbijajacy
-            //3 - 50/50
-            if (key.Key == Key.Number1)
-            {
-                k_d = 1;
-                k_s = 0;
-            }
-            if (key.Key == Key.Number2)
-            {
-                k_d = 0.75f;
-                k_s = 1;
-            }
-            if (key.Key == Key.Number3)
-            {
-                k_d = 0.5f;
-                k_s = 0.5f;
-            }
-
-            if ((key.Key == Key.AltLeft || key.Key == Key.AltRight) &&
-                (key.Key == Key.Enter || key.Key == Key.KeypadEnter))
-                if (this.WindowState == WindowState.Fullscreen)
-                    this.WindowState = WindowState.Normal;
-                else
-                    this.WindowState = WindowState.Fullscreen;
-        }
-
-        #endregion
 
         #region DrawModels()
 
@@ -139,7 +49,7 @@ namespace ConsoleApplication1
             length /= 2.0f;
             Vector3 Center = new Vector3(0, 0, 0);
             float Radius = 32;
-            uint Precision = 128;
+            uint Precision = 64;
 
 
             if (Radius < 0f)
@@ -156,10 +66,21 @@ namespace ConsoleApplication1
             float theta1, theta2, theta3;
 
             Vector3 Normal, Position, L, N, R, V;
-            int alfa = 0;
+
             Vector4 i_a, i_d, i_s;
             float f;
 
+            Font font = new Font(FontFamily.GenericSansSerif, 18.0f);
+
+            TextPrinter printer = new TextPrinter(TextQuality.High);
+
+            printer.Begin();
+            string ka = k_a.ToString("F2");
+            string ks = k_s.ToString("F2");
+            string kd = k_d.ToString("F2");
+            //string alf = alfa.ToString("F2");
+            printer.Print("ambient = " + ka + "\nspecular = " + ks + "\ndiffuse = " + kd/* + "\nalfa = " + alf*/, font, Color.White);
+            printer.End();
 
             for (uint j = 0; j < Precision / 2; j++)
             {
@@ -177,75 +98,6 @@ namespace ConsoleApplication1
                     Position.X = Center.X + Radius * Normal.X;
                     Position.Y = Center.Y + Radius * Normal.Y;
                     Position.Z = Center.Z + Radius * Normal.Z;
-                    
-                    //tutaj zmienić kolor na policzony z phonga
-                    //ambient i diffuse masz w ambientLight, diffuseLight
-                    //L = wektor od powierzchni do zrodla
-                    //N = wektor normalny
-                    //R = wektor odbicia idealnego
-                    //R = 2(L x N)N - L
-                    //V = kierunek do obserwatora
-                    //k_a = odbicie ambientowe
-                    //k_d = odbicie rozpraszajace
-                    //k_d = odbicie odbijajace (WYMYSLEC LEPSZA NAZWE)
-                    //powyzsze 3 stale odpowiadaja za material
-                    //i_a = ambientLight
-                    //i_d = diffuseLight
-                    //i_s = specularLight
-                    //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
-                    //GL.Color4(a,d,s,1)
-
-                    alfa = 10;
-                    N = Normal;
-                    N.Normalize();
-                    L.X = Position.X - lightPos.X;
-                    L.Y = Position.Y - lightPos.Y;
-                    L.Z = Position.Z - lightPos.Z;
-                    L.Normalize();
-                    f = Vector3.Dot(L, N);
-                    R = 2 * f * N - L;
-                    R.Normalize();
-                    V.X = cameraPos.X - Position.X;
-                    V.Y = cameraPos.Y - Position.Y;
-                    V.Z = cameraPos.Z - Position.Z;
-                    V.Normalize();
-                    i_a = k_a * ambientLight;
-                    f = Vector3.Dot(L, N);
-                    i_d = k_d * f *diffuseLight;
-                    f = Vector3.Dot(R, V);
-                    f = (float) Math.Pow(f, alfa);
-                    i_s = k_s * f * specularLight;
-                    //GL.Color3(i_a[0], i_d[0], i_s[0]);
-                    GL.Color3(i_a[0] + i_d[0] + i_s[0], i_a[1] + i_d[1] + i_s[1], i_a[2] + i_d[2] + i_s[2]);
-
-                    GL.Normal3(Normal);
-                    GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
-                    GL.Vertex3(Position);
-
-
-                    Normal.X = (float)(Math.Cos(theta1) * Math.Cos(theta3));
-                    Normal.Y = (float)Math.Sin(theta1);
-                    Normal.Z = (float)(Math.Cos(theta1) * Math.Sin(theta3));
-                    Position.X = Center.X + Radius * Normal.X;
-                    Position.Y = Center.Y + Radius * Normal.Y;
-                    Position.Z = Center.Z + Radius * Normal.Z;
-
-                    //tutaj zmienić kolor na policzony z phonga
-                    //ambient i diffuse masz w ambientLight, diffuseLight
-                    //L = wektor od powierzchni do zrodla
-                    //N = wektor normalny
-                    //R = wektor odbicia idealnego
-                    //R = 2(L x N)N - L
-                    //V = kierunek do obserwatora
-                    //k_a = odbicie ambientowe
-                    //k_d = odbicie rozpraszajace
-                    //k_d = odbicie odbijajace (WYMYSLEC LEPSZA NAZWE)
-                    //powyzsze 3 stale odpowiadaja za material
-                    //i_a = ambientLight
-                    //i_d = diffuseLight
-                    //i_s = specularLight
-                    //I = k_a * i_a + (k_d(L x N)i_d + k_s(R x V)^alfa * i_s)
-                    //GL.Color4(a,d,s,1)
 
                     N = Normal;
                     N.Normalize();
@@ -266,14 +118,44 @@ namespace ConsoleApplication1
                     f = Vector3.Dot(R, V);
                     f = (float)Math.Pow(f, alfa);
                     i_s = k_s * f * specularLight;
-                    //GL.Color3(i_a[0], i_d[0], i_s[0]);
+                    GL.Color3(i_a[0] + i_d[0] + i_s[0], i_a[1] + i_d[1] + i_s[1], i_a[2] + i_d[2] + i_s[2]);
+
+                    GL.Normal3(Normal);
+                    GL.TexCoord2(i * OneThroughPrecision, 2.0f * (j + 1) * OneThroughPrecision);
+                    GL.Vertex3(Position);
+
+
+                    Normal.X = (float)(Math.Cos(theta1) * Math.Cos(theta3));
+                    Normal.Y = (float)Math.Sin(theta1);
+                    Normal.Z = (float)(Math.Cos(theta1) * Math.Sin(theta3));
+                    Position.X = Center.X + Radius * Normal.X;
+                    Position.Y = Center.Y + Radius * Normal.Y;
+                    Position.Z = Center.Z + Radius * Normal.Z;
+
+                    N = Normal;
+                    N.Normalize();
+                    L.X = Position.X - lightPos.X;
+                    L.Y = Position.Y - lightPos.Y;
+                    L.Z = Position.Z - lightPos.Z;
+                    L.Normalize();
+                    f = Vector3.Dot(L, N);
+                    R = 2 * f * N - L;
+                    R.Normalize();
+                    V.X = cameraPos.X - Position.X;
+                    V.Y = cameraPos.Y - Position.Y;
+                    V.Z = cameraPos.Z - Position.Z;
+                    V.Normalize();
+                    i_a = k_a * ambientLight;
+                    f = Vector3.Dot(L, N);
+                    i_d = k_d * f * diffuseLight;
+                    f = Vector3.Dot(R, V);
+                    f = (float)Math.Pow(f, alfa);
+                    i_s = k_s * f * specularLight;
                     GL.Color3(i_a[0] + i_d[0] + i_s[0], i_a[1] + i_d[1] + i_s[1], i_a[2] + i_d[2] + i_s[2]);
 
                     GL.Normal3(Normal);
                     GL.TexCoord2(i * OneThroughPrecision, 2.0f * j * OneThroughPrecision);
                     GL.Vertex3(Position);
-
-
                 }
                 GL.End();
             }
@@ -289,8 +171,8 @@ namespace ConsoleApplication1
         /// <param name="e">Not used.</param>
         protected override void OnLoad(EventArgs e)
         {
-            // Black background
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            // Red background
+            GL.ClearColor(1.0f, 0.0f, 0.0f, 1.0f);
 
             // Hidden surface removal
             GL.Enable(EnableCap.DepthTest);
@@ -325,6 +207,97 @@ namespace ConsoleApplication1
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             rot += 0.5f;
+
+            var state = OpenTK.Input.Keyboard.GetState();
+            if (state[Key.Escape])
+                this.Exit();
+            if (state[Key.Left])
+                lightPos[2] -= 10f;
+            if (state[Key.Right])
+                lightPos[2] += 10f;
+            if (state[Key.Up])
+                lightPos[0] -= 10f;
+            if (state[Key.Down])
+                lightPos[0] += 10f;
+            if (state[Key.A])
+            {
+                if (k_a >= 1f)
+                    k_a = 1f;
+                else
+                    k_a += 0.01f;
+            }
+            if (state[Key.Z])
+            {
+                if (k_a <= 0f)
+                    k_a = 0f;
+                else
+                    k_a -= 0.01f;
+            }
+            if (state[Key.S])
+            {
+                if (k_s >= 1f)
+                    k_s = 1f;
+                else
+                    k_s += 0.01f;
+            }
+            if (state[Key.X])
+            {
+                if (k_s <= 0f)
+                    k_s = 0f;
+                else
+                    k_s -= 0.01f;
+            }
+            if (state[Key.D])
+            {
+                if (k_d >= 1f)
+                    k_d = 1f;
+                else
+                    k_d += 0.01f;
+            }
+            if (state[Key.C])
+            {
+                if (k_d <= 0f)
+                    k_d = 0f;
+                else
+                    k_d -= 0.01f;
+            }
+           /* if (state[Key.F])
+            {
+                alfa += 1;
+            }
+            if (state[Key.V])
+            {
+                if (alfa > 0)
+                {
+                    alfa -= 1;
+                }
+            }*/
+            //presety
+            //1 - 100% rozpraszajacy
+            //2 - 100% odbijajacy
+            //3 - 50/50
+            if (state[Key.Number1])
+            {
+                k_d = 1;
+                k_s = 0;
+            }
+            if (state[Key.Number2])
+            {
+                k_d = 0.75f;
+                k_s = 1;
+            }
+            if (state[Key.Number3])
+            {
+                k_d = 0.5f;
+                k_s = 0.5f;
+            }
+
+            if ((state[Key.AltLeft] || state[Key.AltRight]) &&
+                (state[Key.Enter] || state[Key.KeypadEnter]))
+                if (this.WindowState == WindowState.Fullscreen)
+                    this.WindowState = WindowState.Normal;
+                else
+                    this.WindowState = WindowState.Fullscreen;
         }
 
         #endregion
