@@ -49,7 +49,7 @@ namespace ConsoleApplication1
             length /= 2.0f;
             Vector3 Center = new Vector3(0, 0, 0);
             float Radius = 32;
-            uint Precision = 64;
+            uint Precision = 128;
 
 
             if (Radius < 0f)
