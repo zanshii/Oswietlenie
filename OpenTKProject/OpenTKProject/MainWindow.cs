@@ -70,17 +70,6 @@ namespace ConsoleApplication1
             Vector4 i_a, i_d, i_s;
             float f;
 
-            Font font = new Font(FontFamily.GenericSansSerif, 18.0f);
-
-            TextPrinter printer = new TextPrinter(TextQuality.High);
-
-            printer.Begin();
-            string ka = k_a.ToString("F2");
-            string ks = k_s.ToString("F2");
-            string kd = k_d.ToString("F2");
-            //string alf = alfa.ToString("F2");
-            printer.Print("ambient = " + ka + "\nspecular = " + ks + "\ndiffuse = " + kd/* + "\nalfa = " + alf*/, font, Color.White);
-            printer.End();
 
             for (uint j = 0; j < Precision / 2; j++)
             {
